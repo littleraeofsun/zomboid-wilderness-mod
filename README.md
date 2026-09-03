@@ -41,6 +41,6 @@ zomboid-wilderness-mod/
 
 ## Sleep shelter rule
 
-The mod permits sleeping in tents. At every other sleep attempt, it permits only
-fully roofed player-built rooms. It rejects all pre-built/world structures and
-shows: `You can't sleep here. Find shelter in the wilderness or a structure built by survivors.`
+The mod permits sleeping in tents. At every other sleep attempt, it permits sleeping on the ground outside or in fully player-built rooms. It rejects all pre-built/world structures and vehicles, showing:
+
+`You can't sleep here. Find shelter in the wilderness or a structure built by survivors.`
