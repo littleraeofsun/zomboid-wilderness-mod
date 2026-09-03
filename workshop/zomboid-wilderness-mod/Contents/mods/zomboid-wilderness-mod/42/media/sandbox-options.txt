@@ -1,0 +1,7 @@
+VERSION = 1,
+
+option zomboid-wilderness-mod.EnableSleepShelterRule
+{
+    type = boolean, default = true,
+    page = zomboid-wilderness-mod, translation = Sandbox_EnableSleepShelterRule,
+}
