@@ -1,0 +1,6 @@
+name=zomboid-wilderness-mod
+id=zomboid-wilderness-mod
+description=Project Zomboid Build 42 wilderness-focused mod with survivor-built shelter sleep rules.
+poster=poster.png
+version=0.1.0
+require=3513206060;3429176285;2904475897;3775407541

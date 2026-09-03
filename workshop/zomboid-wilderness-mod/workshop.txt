@@ -1,0 +1,3 @@
+title=zomboid-wilderness-mod
+description=Project Zomboid Build 42 wilderness-focused mod workspace.
+visibility=private
