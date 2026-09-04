@@ -3,4 +3,3 @@ id=zomboid-wilderness-mod
 description=Project Zomboid Build 42 wilderness-focused mod that includes configurable starting item rules and eligible sleeping location rules.
 poster=poster.png
 version=0.1.0
-require=3513206060;3429176285;2904475897;3775407541

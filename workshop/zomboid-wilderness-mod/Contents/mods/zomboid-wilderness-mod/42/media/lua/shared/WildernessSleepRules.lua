@@ -4,8 +4,32 @@ WildernessSleepRules.DENIAL_TEXT = "You can't sleep here. Find shelter in the wi
 WildernessSleepRules.SANDBOX_OPTION = "zomboid-wilderness-mod.EnableSleepShelterRule"
 WildernessSleepRules.STARTING_ITEMS_OPTION = "zomboid-wilderness-mod.StartingItemsPreset"
 WildernessSleepRules.STARTING_ITEMS = {
-    ["Wilderness Glamper"] = { "Base.HikingBackpack" },
-    ["Stranded Hiker"] = { "Base.HikingBackpack" },
+    ["Wilderness Glamper"] = {
+        "Base.Bag_BigHikingBag",
+        "Base.TentGreen_Packed",
+        "Base.SleepingBag_Green_Packed",
+        "Base.Multitool",
+        "Base.Pot",
+        "Base.WaterBottle",
+        "Base.GranolaBar",
+        "Base.GranolaBar",
+        "Base.Bandage",
+        "Base.Bandaid",
+        "Base.Bandaid",
+        "Base.MagnesiumFirestarter",
+        "Base.CompassDirectional",
+        "Base.WaterPurificationTablets",
+        "Base.InsectRepellent",
+        "Base.Spork",
+     },
+    ["Stranded Hiker"] = { 
+        "Base.Bag_NormalHikingBag",
+        "Base.Tarp",
+        "Base.HuntingKnife",
+        "Base.Pot",
+        "Base.WaterBottle",
+        "Base.GranolaBar",
+    },
     ["Naked and Afraid"] = {},
 }
 
