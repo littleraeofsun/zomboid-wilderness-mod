@@ -38,6 +38,29 @@ local function addLoadoutWithBackpack(player, items, backpackType)
     return backpackInventory
 end
 
+local function addHawksLoadout(player, backpackInventory)
+    local inventory = player:getInventory()
+    local chickenFeather = inventory:AddItem("Base.ChickenFeather")
+    local cudgel = inventory:AddItem("Base.Cudgel_Nails")
+    local rpgBook = inventory:AddItem("Base.RPGmanual")
+    local dicePouch = inventory:AddItem("Base.SeedBag")
+    local pouchInventory = dicePouch:getInventory()
+    pouchInventory:AddItem("Base.Dice_4")
+    pouchInventory:AddItem("Base.Dice_6")
+    pouchInventory:AddItem("Base.Dice_8")
+    pouchInventory:AddItem("Base.Dice_10")
+    pouchInventory:AddItem("Base.Dice_12")
+    pouchInventory:AddItem("Base.Dice_20")
+    pouchInventory:AddItem("Base.Dice_00")
+
+    if backpackInventory ~= nil then
+        backpackInventory:AddItem(chickenFeather)
+        backpackInventory:AddItem(cudgel)
+        backpackInventory:AddItem(rpgBook)
+        backpackInventory:AddItem(dicePouch)
+    end
+end
+
 local function applyStartingLoadout(playerIndex, player)
     if player == nil then
         return
@@ -69,27 +92,7 @@ local function applyStartingLoadout(playerIndex, player)
     end
 
     if isHawks then
-        local inventory = player:getInventory()
-        local chickenFeather = inventory:AddItem("Base.ChickenFeather")
-        local cudgel = inventory:AddItem("Base.Cudgel_Nails")
-
-        local rpgBook = inventory:AddItem("Base.RPGmanual")
-        local dicePouch = inventory:AddItem("Base.SeedBag")
-        local pouchInventory = dicePouch:getInventory()
-        pouchInventory:AddItem("Base.Dice_4")
-        pouchInventory:AddItem("Base.Dice_6")
-        pouchInventory:AddItem("Base.Dice_8")
-        pouchInventory:AddItem("Base.Dice_10")
-        pouchInventory:AddItem("Base.Dice_12")
-        pouchInventory:AddItem("Base.Dice_20")
-        pouchInventory:AddItem("Base.Dice_00")
-
-        if backpackInventory ~= nil then
-            backpackInventory:AddItem(chickenFeather)
-            backpackInventory:AddItem(cudgel)
-            backpackInventory:AddItem(rpgBook)
-            backpackInventory:AddItem(dicePouch)
-        end
+        addHawksLoadout(player, backpackInventory)
     end
 
     if preset == "Naked and Afraid" then
