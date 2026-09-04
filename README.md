@@ -39,6 +39,10 @@ zomboid-wilderness-mod/
 - Add extra version folders as needed later, such as `42.1/` or `42.2/`.
 - Replace the placeholder `mod.info`, `workshop.txt`, `poster.png`, and `preview.png` when the mod is ready to publish.
 
+## Game start date default
+
+The mod changes the default start date to April 1 at 7am.
+
 ## Sleep shelter rule
 
 The mod permits sleeping in tents. At every other sleep attempt, it permits sleeping on the ground outside or in fully player-built rooms. It rejects all pre-built/world structures and vehicles, showing:
