@@ -31,6 +31,9 @@ WildernessSurvivalRules.STARTING_ITEMS = {
         "Base.WaterPurificationTablets",
         "Base.InsectRepellent",
         "Base.Spork",
+        "Base.Torch",
+        "Base.Battery",
+        "Base.DigitalWatch2",
      },
     ["Stranded Hiker"] = { 
         "Base.Bag_NormalHikingBag",
