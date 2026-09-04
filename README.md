@@ -45,6 +45,8 @@ zomboid-wilderness-mod/
 - `client/WildernessSleepRestriction.lua` enforces the eligible sleeping-location rule.
 - `client/WildernessStartingLoadout.lua` applies the selected starting-loadout preset to new characters.
 - `client/WildernessCompassMinimap.lua` requires a compass before displaying the minimap when enabled.
+- `client/RPGSessionClient.lua` is the client-side RPG Session feature stub.
+- `server/RPGSessionServer.lua` is the server-side RPG Session feature stub.
 
 ## Sleep shelter rule
 
@@ -67,3 +69,7 @@ The `Compass Opens Minimap` sandbox setting controls whether a compass is requir
 - `Disabled` leaves the normal game minimap behavior unchanged.
 - `Main Inventory` requires a compass in the player's main inventory, including equipped or attached compasses.
 - `Anywhere` allows a compass stored anywhere on the player, including bags and other containers.
+
+## RPG Session
+
+Reading an RPG Manual starts an RPG Session. Every configured interval, the reader and any online player on the same floor within the configured tile range receive the configured unhappiness and stress reductions if they carry at least one die, including dice in containers. The feature and its range, interval, and rewards are configurable in the Wilderness Survivor sandbox settings.
