@@ -52,3 +52,11 @@ The sandbox now includes a starting-items preset:
 - `Default` keeps vanilla starting items and doesn't change anything.
 - `Wilderness Glamper`, `Stranded Hiker`, and `Naked and Afraid` are stubbed with wilderness-focused starts.
 - The custom presets remove non-clothing items on spawn, and `Naked and Afraid` also strips clothing.
+
+## Compass opens minimap
+
+The `Compass Opens Minimap` sandbox setting controls whether a compass is required to display the minimap:
+
+- `Disabled` leaves the normal game minimap behavior unchanged.
+- `Main Inventory` requires a compass in the player's main inventory, including equipped or attached compasses.
+- `Anywhere` allows a compass stored anywhere on the player, including bags and other containers.

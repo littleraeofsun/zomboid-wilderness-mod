@@ -7,5 +7,10 @@
   "Sandbox_WildernessSurvivor_StartingItemsPreset_Values_option1": "Vanilla",
   "Sandbox_WildernessSurvivor_StartingItemsPreset_Values_option2": "Wilderness Glamper",
   "Sandbox_WildernessSurvivor_StartingItemsPreset_Values_option3": "Stranded Hiker",
-  "Sandbox_WildernessSurvivor_StartingItemsPreset_Values_option4": "Naked and Afraid"
+  "Sandbox_WildernessSurvivor_StartingItemsPreset_Values_option4": "Naked and Afraid",
+  "Sandbox_WildernessSurvivor_CompassOpensMinimap": "Compass Opens Minimap",
+  "Sandbox_WildernessSurvivor_CompassOpensMinimap_tooltip": "Require a compass on player to display the minimap.",
+  "Sandbox_WildernessSurvivor_CompassOpensMinimap_Values_option1": "Disabled",
+  "Sandbox_WildernessSurvivor_CompassOpensMinimap_Values_option2": "Main Inventory",
+  "Sandbox_WildernessSurvivor_CompassOpensMinimap_Values_option3": "Anywhere"
 }

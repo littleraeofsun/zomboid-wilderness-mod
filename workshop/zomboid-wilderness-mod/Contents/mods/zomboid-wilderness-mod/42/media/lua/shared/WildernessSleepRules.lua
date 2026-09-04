@@ -8,6 +8,11 @@ WildernessSleepRules.STARTING_ITEMS_PRESETS = {
     [3] = "Stranded Hiker",
     [4] = "Naked and Afraid",
 }
+WildernessSleepRules.COMPASS_MINIMAP_MODES = {
+    [1] = "Disabled",
+    [2] = "Main Inventory",
+    [3] = "Anywhere",
+}
 WildernessSleepRules.STARTING_ITEMS = {
     ["Wilderness Glamper"] = {
         "Base.Bag_BigHikingBag",
@@ -119,4 +124,19 @@ end
 function WildernessSleepRules.getStartingItemsForPreset()
     local preset = WildernessSleepRules.getStartingItemsPreset()
     return WildernessSleepRules.STARTING_ITEMS[preset]
+end
+
+function WildernessSleepRules.getCompassMinimapMode()
+    local settings = WildernessSleepRules.getSandboxSettings()
+    if settings ~= nil then
+        local mode = settings.CompassOpensMinimap
+        if WildernessSleepRules.COMPASS_MINIMAP_MODES[mode] ~= nil then
+            return WildernessSleepRules.COMPASS_MINIMAP_MODES[mode]
+        end
+        if mode == "Disabled" or mode == "Main Inventory" or mode == "Anywhere" then
+            return mode
+        end
+    end
+
+    return "Disabled"
 end

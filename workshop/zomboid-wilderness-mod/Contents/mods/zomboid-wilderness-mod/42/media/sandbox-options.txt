@@ -10,3 +10,9 @@ option WildernessSurvivor.StartingItemsPreset = {
     page = WildernessSurvivor, translation = WildernessSurvivor_StartingItemsPreset,
     valueTranslation = WildernessSurvivor_StartingItemsPreset_Values,
 }
+
+option WildernessSurvivor.CompassOpensMinimap = {
+    type = enum, numValues = 3, default = 2,
+    page = WildernessSurvivor, translation = WildernessSurvivor_CompassOpensMinimap,
+    valueTranslation = WildernessSurvivor_CompassOpensMinimap_Values,
+}
