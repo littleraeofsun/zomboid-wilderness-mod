@@ -2,6 +2,12 @@ WildernessSleepRules = WildernessSleepRules or {}
 
 WildernessSleepRules.DENIAL_TEXT = "You can't sleep here. Find shelter in the wilderness or a structure built by survivors."
 WildernessSleepRules.SANDBOX_OPTION = "zomboid-wilderness-mod.EnableSleepShelterRule"
+WildernessSleepRules.STARTING_ITEMS_OPTION = "zomboid-wilderness-mod.StartingItemsPreset"
+WildernessSleepRules.STARTING_ITEMS = {
+    ["Wilderness Glamper"] = { "Base.HikingBackpack" },
+    ["Stranded Hiker"] = { "Base.HikingBackpack" },
+    ["Naked and Afraid"] = {},
+}
 
 function WildernessSleepRules.isTent(object)
     return object ~= nil and object:isTent()
@@ -55,4 +61,24 @@ function WildernessSleepRules.canSleepAt(player, bed)
     return WildernessSleepRules.isTent(bed)
         or WildernessSleepRules.isTentAt(square)
         or WildernessSleepRules.isPlayerBuiltShelter(square)
+end
+
+function WildernessSleepRules.getStartingItemsPreset()
+    if SandboxVars ~= nil and SandboxVars["zomboid-wilderness-mod"] ~= nil then
+        local settings = SandboxVars["zomboid-wilderness-mod"]
+        if settings.StartingItemsPreset ~= nil then
+            return settings.StartingItemsPreset
+        end
+    end
+
+    return "Default"
+end
+
+function WildernessSleepRules.shouldUseCustomStartingItems()
+    return WildernessSleepRules.getStartingItemsPreset() ~= "Default"
+end
+
+function WildernessSleepRules.getStartingItemsForPreset()
+    local preset = WildernessSleepRules.getStartingItemsPreset()
+    return WildernessSleepRules.STARTING_ITEMS[preset]
 end

@@ -1,4 +1,4 @@
-# zomboid-wilderness-mod
+# Wilderness Survivor Mod
 
 Project Zomboid Build 42 mod workspace for a wilderness-focused ruleset and dependencies on:
 
@@ -44,3 +44,15 @@ zomboid-wilderness-mod/
 The mod permits sleeping in tents. At every other sleep attempt, it permits sleeping on the ground outside or in fully player-built rooms. It rejects all pre-built/world structures and vehicles, showing:
 
 `You can't sleep here. Find shelter in the wilderness or a structure built by survivors.`
+
+## Starting items preset
+
+The sandbox now includes a starting-items preset:
+
+- `Default` keeps vanilla starting items and doesn't change anything.
+- `Wilderness Glamper`, `Stranded Hiker`, and `Naked and Afraid` are stubbed with wilderness-focused starts.
+- The custom presets remove non-clothing items on spawn, and `Naked and Afraid` also strips clothing.
+
+## Start date and time
+
+New games now start on April 1 at 7:00 AM.
