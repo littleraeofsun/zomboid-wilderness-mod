@@ -39,6 +39,13 @@ zomboid-wilderness-mod/
 - Add extra version folders as needed later, such as `42.1/` or `42.2/`.
 - Replace the placeholder `mod.info`, `workshop.txt`, `poster.png`, and `preview.png` when the mod is ready to publish.
 
+## Lua modules
+
+- `shared/WildernessSurvivalRules.lua` contains the shared wilderness rules, sandbox-setting accessors, starting-loadout definitions, and minimap modes.
+- `client/WildernessSleepRestriction.lua` enforces the eligible sleeping-location rule.
+- `client/WildernessStartingLoadout.lua` applies the selected starting-loadout preset to new characters.
+- `client/WildernessCompassMinimap.lua` requires a compass before displaying the minimap when enabled.
+
 ## Sleep shelter rule
 
 The mod permits sleeping in tents. At every other sleep attempt, it permits sleeping on the ground outside or in fully player-built rooms. It rejects all pre-built/world structures and vehicles, showing:
