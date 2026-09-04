@@ -1,4 +1,4 @@
-require "WildernessSleepRules"
+require "WildernessSurvivalRules"
 
 local function removeAllNonClothingItems(player)
     local inventory = player:getInventory()
@@ -19,19 +19,19 @@ local function stripAllClothing(player)
     end
 end
 
-local function giveStartingItems(playerIndex, player)
+local function applyStartingLoadout(playerIndex, player)
     if player == nil then
         return
     end
 
-    local preset = WildernessSleepRules.getStartingItemsPreset()
+    local preset = WildernessSurvivalRules.getStartingItemsPreset()
     if preset == "Vanilla" then
         return
     end
 
     removeAllNonClothingItems(player)
 
-    local items = WildernessSleepRules.getStartingItemsForPreset()
+    local items = WildernessSurvivalRules.getStartingItemsForPreset()
     if items ~= nil then
         for index = 1, #items do
             player:getInventory():AddItem(items[index])
@@ -48,4 +48,4 @@ local function giveStartingItems(playerIndex, player)
     end
 end
 
-Events.OnCreatePlayer.Add(giveStartingItems)
+Events.OnCreatePlayer.Add(applyStartingLoadout)

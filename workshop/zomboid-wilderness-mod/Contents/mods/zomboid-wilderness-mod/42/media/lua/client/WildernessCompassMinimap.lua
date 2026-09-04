@@ -1,4 +1,4 @@
-require "WildernessSleepRules"
+require "WildernessSurvivalRules"
 require "ISUI/Maps/ISMiniMap"
 
 local COMPASS_TYPES = {
@@ -31,7 +31,7 @@ local function containerHasCompass(container, includeContents)
 end
 
 local function playerCanDisplayMinimap(player)
-    local mode = WildernessSleepRules.getCompassMinimapMode()
+    local mode = WildernessSurvivalRules.getCompassMinimapMode()
     if mode == "Disabled" then
         return true
     end

@@ -1,19 +1,19 @@
-WildernessSleepRules = WildernessSleepRules or {}
+WildernessSurvivalRules = WildernessSurvivalRules or {}
 
-WildernessSleepRules.DENIAL_TEXT = "You can't sleep here. Find shelter in the wilderness or a structure built by survivors."
-WildernessSleepRules.SANDBOX_TABLE = "WildernessSurvivor"
-WildernessSleepRules.STARTING_ITEMS_PRESETS = {
+WildernessSurvivalRules.DENIAL_TEXT = "You can't sleep here. Find shelter in the wilderness or a structure built by survivors."
+WildernessSurvivalRules.SANDBOX_TABLE = "WildernessSurvivor"
+WildernessSurvivalRules.STARTING_ITEMS_PRESETS = {
     [1] = "Vanilla",
     [2] = "Wilderness Glamper",
     [3] = "Stranded Hiker",
     [4] = "Naked and Afraid",
 }
-WildernessSleepRules.COMPASS_MINIMAP_MODES = {
+WildernessSurvivalRules.COMPASS_MINIMAP_MODES = {
     [1] = "Disabled",
     [2] = "Main Inventory",
     [3] = "Anywhere",
 }
-WildernessSleepRules.STARTING_ITEMS = {
+WildernessSurvivalRules.STARTING_ITEMS = {
     ["Wilderness Glamper"] = {
         "Base.Bag_BigHikingBag",
         "Base.TentGreen_Packed",
@@ -43,31 +43,31 @@ WildernessSleepRules.STARTING_ITEMS = {
     ["Naked and Afraid"] = {},
 }
 
-function WildernessSleepRules.getSandboxSettings()
+function WildernessSurvivalRules.getSandboxSettings()
     if SandboxVars == nil then
         return nil
     end
 
-    return SandboxVars[WildernessSleepRules.SANDBOX_TABLE]
+    return SandboxVars[WildernessSurvivalRules.SANDBOX_TABLE]
 end
 
-function WildernessSleepRules.isSleepShelterRuleEnabled()
-    local settings = WildernessSleepRules.getSandboxSettings()
+function WildernessSurvivalRules.isSleepShelterRuleEnabled()
+    local settings = WildernessSurvivalRules.getSandboxSettings()
     return settings == nil or settings.EnableSleepShelterRule ~= false
 end
 
-function WildernessSleepRules.isTent(object)
+function WildernessSurvivalRules.isTent(object)
     return object ~= nil and object:isTent()
 end
 
-function WildernessSleepRules.isTentAt(square)
+function WildernessSurvivalRules.isTentAt(square)
     if square == nil then
         return false
     end
 
     local objects = square:getObjects()
     for index = 0, objects:size() - 1 do
-        if WildernessSleepRules.isTent(objects:get(index)) then
+        if WildernessSurvivalRules.isTent(objects:get(index)) then
             return true
         end
     end
@@ -75,7 +75,7 @@ function WildernessSleepRules.isTentAt(square)
     return false
 end
 
-function WildernessSleepRules.isPlayerBuiltShelter(square)
+function WildernessSurvivalRules.isPlayerBuiltShelter(square)
     if square == nil then
         return false
     end
@@ -87,29 +87,29 @@ function WildernessSleepRules.isPlayerBuiltShelter(square)
         and region:getBuildingDef() == nil
 end
 
-function WildernessSleepRules.canSleepAt(player, bed)
+function WildernessSurvivalRules.canSleepAt(player, bed)
     local square = player:getCurrentSquare()
     if bed == nil then
         return true
     end
 
-    if not WildernessSleepRules.isSleepShelterRuleEnabled() then
+    if not WildernessSurvivalRules.isSleepShelterRuleEnabled() then
         return true
     end
 
-    return WildernessSleepRules.isTent(bed)
-        or WildernessSleepRules.isTentAt(square)
-        or WildernessSleepRules.isPlayerBuiltShelter(square)
+    return WildernessSurvivalRules.isTent(bed)
+        or WildernessSurvivalRules.isTentAt(square)
+        or WildernessSurvivalRules.isPlayerBuiltShelter(square)
 end
 
-function WildernessSleepRules.getStartingItemsPreset()
-    local settings = WildernessSleepRules.getSandboxSettings()
+function WildernessSurvivalRules.getStartingItemsPreset()
+    local settings = WildernessSurvivalRules.getSandboxSettings()
     if settings ~= nil then
         local preset = settings.StartingItemsPreset
-        if WildernessSleepRules.STARTING_ITEMS_PRESETS[preset] ~= nil then
-            return WildernessSleepRules.STARTING_ITEMS_PRESETS[preset]
+        if WildernessSurvivalRules.STARTING_ITEMS_PRESETS[preset] ~= nil then
+            return WildernessSurvivalRules.STARTING_ITEMS_PRESETS[preset]
         end
-        if WildernessSleepRules.STARTING_ITEMS[preset] ~= nil or preset == "Vanilla" then
+        if WildernessSurvivalRules.STARTING_ITEMS[preset] ~= nil or preset == "Vanilla" then
             return preset
         end
     end
@@ -117,21 +117,21 @@ function WildernessSleepRules.getStartingItemsPreset()
     return "Vanilla"
 end
 
-function WildernessSleepRules.shouldUseCustomStartingItems()
-    return WildernessSleepRules.getStartingItemsPreset() ~= "Vanilla"
+function WildernessSurvivalRules.shouldUseCustomStartingItems()
+    return WildernessSurvivalRules.getStartingItemsPreset() ~= "Vanilla"
 end
 
-function WildernessSleepRules.getStartingItemsForPreset()
-    local preset = WildernessSleepRules.getStartingItemsPreset()
-    return WildernessSleepRules.STARTING_ITEMS[preset]
+function WildernessSurvivalRules.getStartingItemsForPreset()
+    local preset = WildernessSurvivalRules.getStartingItemsPreset()
+    return WildernessSurvivalRules.STARTING_ITEMS[preset]
 end
 
-function WildernessSleepRules.getCompassMinimapMode()
-    local settings = WildernessSleepRules.getSandboxSettings()
+function WildernessSurvivalRules.getCompassMinimapMode()
+    local settings = WildernessSurvivalRules.getSandboxSettings()
     if settings ~= nil then
         local mode = settings.CompassOpensMinimap
-        if WildernessSleepRules.COMPASS_MINIMAP_MODES[mode] ~= nil then
-            return WildernessSleepRules.COMPASS_MINIMAP_MODES[mode]
+        if WildernessSurvivalRules.COMPASS_MINIMAP_MODES[mode] ~= nil then
+            return WildernessSurvivalRules.COMPASS_MINIMAP_MODES[mode]
         end
         if mode == "Disabled" or mode == "Main Inventory" or mode == "Anywhere" then
             return mode
