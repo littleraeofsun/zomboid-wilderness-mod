@@ -2,4 +2,5 @@ name=Wilderness Survivor
 id=zomboid-wilderness-mod
 description=Project Zomboid Build 42 wilderness-focused mod that includes configurable starting item rules and eligible sleeping location rules.
 poster=poster.png
-version=0.1.0
+modversion=0.1.0
+versionMin=42.0

@@ -10,15 +10,7 @@ local function installSleepInterceptor()
 
     contextMenu.onSleepWalkToComplete = function(playerIndex, bed)
         local player = getSpecificPlayer(playerIndex)
-        local sandboxEnabled = true
-        if SandboxVars ~= nil and SandboxVars["zomboid-wilderness-mod"] ~= nil then
-            local settings = SandboxVars["zomboid-wilderness-mod"]
-            if settings.EnableSleepShelterRule ~= nil then
-                sandboxEnabled = settings.EnableSleepShelterRule
-            end
-        end
-
-        if not sandboxEnabled then
+        if not WildernessSleepRules.isSleepShelterRuleEnabled() then
             WildernessSleepRules.originalOnSleepWalkToComplete(playerIndex, bed)
             return
         end

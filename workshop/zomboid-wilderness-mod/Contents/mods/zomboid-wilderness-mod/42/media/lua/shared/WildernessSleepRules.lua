@@ -1,8 +1,13 @@
 WildernessSleepRules = WildernessSleepRules or {}
 
 WildernessSleepRules.DENIAL_TEXT = "You can't sleep here. Find shelter in the wilderness or a structure built by survivors."
-WildernessSleepRules.SANDBOX_OPTION = "zomboid-wilderness-mod.EnableSleepShelterRule"
-WildernessSleepRules.STARTING_ITEMS_OPTION = "zomboid-wilderness-mod.StartingItemsPreset"
+WildernessSleepRules.SANDBOX_TABLE = "WildernessSurvivor"
+WildernessSleepRules.STARTING_ITEMS_PRESETS = {
+    [1] = "Vanilla",
+    [2] = "Wilderness Glamper",
+    [3] = "Stranded Hiker",
+    [4] = "Naked and Afraid",
+}
 WildernessSleepRules.STARTING_ITEMS = {
     ["Wilderness Glamper"] = {
         "Base.Bag_BigHikingBag",
@@ -32,6 +37,19 @@ WildernessSleepRules.STARTING_ITEMS = {
     },
     ["Naked and Afraid"] = {},
 }
+
+function WildernessSleepRules.getSandboxSettings()
+    if SandboxVars == nil then
+        return nil
+    end
+
+    return SandboxVars[WildernessSleepRules.SANDBOX_TABLE]
+end
+
+function WildernessSleepRules.isSleepShelterRuleEnabled()
+    local settings = WildernessSleepRules.getSandboxSettings()
+    return settings == nil or settings.EnableSleepShelterRule ~= false
+end
 
 function WildernessSleepRules.isTent(object)
     return object ~= nil and object:isTent()
@@ -70,15 +88,7 @@ function WildernessSleepRules.canSleepAt(player, bed)
         return true
     end
 
-    local sandboxEnabled = true
-    if SandboxVars ~= nil and SandboxVars["zomboid-wilderness-mod"] ~= nil then
-        local settings = SandboxVars["zomboid-wilderness-mod"]
-        if settings.EnableSleepShelterRule ~= nil then
-            sandboxEnabled = settings.EnableSleepShelterRule
-        end
-    end
-
-    if not sandboxEnabled then
+    if not WildernessSleepRules.isSleepShelterRuleEnabled() then
         return true
     end
 
@@ -88,18 +98,22 @@ function WildernessSleepRules.canSleepAt(player, bed)
 end
 
 function WildernessSleepRules.getStartingItemsPreset()
-    if SandboxVars ~= nil and SandboxVars["zomboid-wilderness-mod"] ~= nil then
-        local settings = SandboxVars["zomboid-wilderness-mod"]
-        if settings.StartingItemsPreset ~= nil then
-            return settings.StartingItemsPreset
+    local settings = WildernessSleepRules.getSandboxSettings()
+    if settings ~= nil then
+        local preset = settings.StartingItemsPreset
+        if WildernessSleepRules.STARTING_ITEMS_PRESETS[preset] ~= nil then
+            return WildernessSleepRules.STARTING_ITEMS_PRESETS[preset]
+        end
+        if WildernessSleepRules.STARTING_ITEMS[preset] ~= nil or preset == "Vanilla" then
+            return preset
         end
     end
 
-    return "Default"
+    return "Vanilla"
 end
 
 function WildernessSleepRules.shouldUseCustomStartingItems()
-    return WildernessSleepRules.getStartingItemsPreset() ~= "Default"
+    return WildernessSleepRules.getStartingItemsPreset() ~= "Vanilla"
 end
 
 function WildernessSleepRules.getStartingItemsForPreset()

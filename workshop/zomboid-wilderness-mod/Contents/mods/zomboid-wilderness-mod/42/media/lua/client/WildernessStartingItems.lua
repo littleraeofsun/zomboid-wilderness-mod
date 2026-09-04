@@ -19,7 +19,11 @@ local function stripAllClothing(player)
     end
 end
 
-local function giveStartingItems(player)
+local function giveStartingItems(playerIndex, player)
+    if player == nil then
+        return
+    end
+
     local preset = WildernessSleepRules.getStartingItemsPreset()
     if preset == "Vanilla" then
         return
@@ -34,8 +38,8 @@ local function giveStartingItems(player)
         end
     end
 
-    if preset == "Wilderness Glamping" then
-        local wipes = inventory:AddItem("Base.AlcoholWipes")
+    if preset == "Wilderness Glamper" then
+        local wipes = player:getInventory():AddItem("Base.AlcoholWipes")
         wipes:setUsedDelta(0.4)
     end
 
