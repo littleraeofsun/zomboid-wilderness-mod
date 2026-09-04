@@ -10,4 +10,4 @@ local function setStartDateAndTime()
     gameTime:setStartTime(7)
 end
 
-Events.OnGameStart.Add(setStartDateAndTime)
+Events.OnCreatePlayer.Add(setStartDateAndTime)
