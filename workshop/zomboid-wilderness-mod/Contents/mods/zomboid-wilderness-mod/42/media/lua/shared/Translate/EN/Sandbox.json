@@ -1,7 +1,11 @@
 {
-  "zomboid-wilderness-mod": "Wilderness Survivor Settings",
-  "zomboid-wilderness-mod.EnableSleepShelterRule": "Enable Sleep Shelter Exclusion Rule",
-  "zomboid-wilderness-mod.EnableSleepShelterRule_tooltip": "Enabling this makes it so players <b><i>cannot</i></b> sleep in pre-made buildings or vehicles. They will have to sleep on the ground outside, in a tent, or in a player-built structure.",
-  "zomboid-wilderness-mod.StartingItemsPreset": "Starting Items Preset",
-  "zomboid-wilderness-mod.StartingItemsPreset_tooltip": "<b>Vanilla</b> leaves traditional game settings intact. <b>Wilderness Glamper</b> starts off with tent, sleeping bag and other small comforts. <b>Stranded Hiker</b> starts with the barest essentials. <b>Naked and Afraid</b> starts with absolutely nothing—<i>good luck!</i>"
+  "Sandbox_WildernessSurvivor": "Wilderness Survivor Settings",
+  "Sandbox_WildernessSurvivor_EnableSleepShelterRule": "Enable Sleep Shelter Exclusion Rule",
+  "Sandbox_WildernessSurvivor_EnableSleepShelterRule_tooltip": "Prevent sleeping in pre-made buildings and vehicles. Players can sleep outdoors, in a tent, or in a player-built structure.",
+  "Sandbox_WildernessSurvivor_StartingItemsPreset": "Starting Items Preset",
+  "Sandbox_WildernessSurvivor_StartingItemsPreset_tooltip": "Choose the equipment supplied to new characters.",
+  "Sandbox_WildernessSurvivor_StartingItemsPreset_Values_option1": "Vanilla",
+  "Sandbox_WildernessSurvivor_StartingItemsPreset_Values_option2": "Wilderness Glamper",
+  "Sandbox_WildernessSurvivor_StartingItemsPreset_Values_option3": "Stranded Hiker",
+  "Sandbox_WildernessSurvivor_StartingItemsPreset_Values_option4": "Naked and Afraid"
 }

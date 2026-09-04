@@ -1,14 +1,12 @@
 VERSION = 1,
 
-option zomboid-wilderness-mod.EnableSleepShelterRule
-{
+option WildernessSurvivor.EnableSleepShelterRule = {
     type = boolean, default = true,
-    page = zomboid-wilderness-mod, translation = Sandbox_WildernessSurvivor_EnableSleepShelterRule,
+    page = WildernessSurvivor, translation = WildernessSurvivor_EnableSleepShelterRule,
 }
 
-option zomboid-wilderness-mod.StartingItemsPreset
-{
-    type = enum, default = Stranded Hiker,
-    page = zomboid-wilderness-mod, translation = Sandbox_WildernessSurvivor_StartingItemsPreset,
-    values = Vanilla;Wilderness Glamper;Stranded Hiker;Naked and Afraid,
+option WildernessSurvivor.StartingItemsPreset = {
+    type = enum, numValues = 4, default = 3,
+    page = WildernessSurvivor, translation = WildernessSurvivor_StartingItemsPreset,
+    valueTranslation = WildernessSurvivor_StartingItemsPreset_Values,
 }
