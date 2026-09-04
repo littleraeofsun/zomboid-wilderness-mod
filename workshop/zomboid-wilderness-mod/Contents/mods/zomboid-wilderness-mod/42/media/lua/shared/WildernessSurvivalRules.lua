@@ -2,6 +2,7 @@ WildernessSurvivalRules = WildernessSurvivalRules or {}
 
 WildernessSurvivalRules.DENIAL_TEXT = "You can't sleep here. Find shelter in the wilderness or a structure built by survivors."
 WildernessSurvivalRules.SANDBOX_TABLE = "WildernessSurvivor"
+
 WildernessSurvivalRules.STARTING_ITEMS_PRESETS = {
     [1] = "Vanilla",
     [2] = "Wilderness Glamper",
@@ -142,4 +143,36 @@ function WildernessSurvivalRules.getCompassMinimapMode()
     end
 
     return "Disabled"
+end
+
+local rpgModule = {
+    NAME = "WildernessSurvivor_RPGSession",
+    EVENT_START = "RPGReadingStart",
+    EVENT_STOP = "RPGReadingStop",
+}
+WildernessSurvivalRules.RPG_SESSION_MODULE = rpgModule
+
+function WildernessSurvivalRules.isRPGSessionEnabled()
+    local settings = WildernessSurvivalRules.getSandboxSettings()
+    return settings == nil or settings.EnableRPGSession ~= false
+end
+
+function WildernessSurvivalRules.getRPGSessionRange()
+    local settings = WildernessSurvivalRules.getSandboxSettings()
+    return settings ~= nil and settings.RPGSessionRange or 3
+end
+
+function WildernessSurvivalRules.getRPGSessionInterval()
+    local settings = WildernessSurvivalRules.getSandboxSettings()
+    return settings ~= nil and settings.RPGSessionInterval or 5
+end
+
+function WildernessSurvivalRules.getRPGSessionUnhappinessReduction()
+    local settings = WildernessSurvivalRules.getSandboxSettings()
+    return settings ~= nil and settings.RPGSessionUnhappinessReduction or 3
+end
+
+function WildernessSurvivalRules.getRPGSessionStressReduction()
+    local settings = WildernessSurvivalRules.getSandboxSettings()
+    return settings ~= nil and settings.RPGSessionStressReduction or 2
 end

@@ -12,5 +12,15 @@
   "Sandbox_WildernessSurvivor_CompassOpensMinimap_tooltip": "Require a compass on player to display the minimap.",
   "Sandbox_WildernessSurvivor_CompassOpensMinimap_Values_option1": "Disabled",
   "Sandbox_WildernessSurvivor_CompassOpensMinimap_Values_option2": "Main Inventory",
-  "Sandbox_WildernessSurvivor_CompassOpensMinimap_Values_option3": "Anywhere"
+  "Sandbox_WildernessSurvivor_CompassOpensMinimap_Values_option3": "Anywhere",
+  "Sandbox_WildernessSurvivor_EnableRPGSession": "Enable RPG Session",
+  "Sandbox_WildernessSurvivor_EnableRPGSession_tooltip": "Allow nearby players carrying dice to gain mood benefits while an RPG Manual is being read.",
+  "Sandbox_WildernessSurvivor_RPGSessionRange": "RPG Session Range",
+  "Sandbox_WildernessSurvivor_RPGSessionRange_tooltip": "Maximum distance in tiles from the reader for players carrying dice to participate.",
+  "Sandbox_WildernessSurvivor_RPGSessionInterval": "RPG Session Interval",
+  "Sandbox_WildernessSurvivor_RPGSessionInterval_tooltip": "Minutes between RPG Session mood benefits.",
+  "Sandbox_WildernessSurvivor_RPGSessionUnhappinessReduction": "RPG Session Unhappiness Reduction",
+  "Sandbox_WildernessSurvivor_RPGSessionUnhappinessReduction_tooltip": "Unhappiness removed from each participant at every interval.",
+  "Sandbox_WildernessSurvivor_RPGSessionStressReduction": "RPG Session Stress Reduction",
+  "Sandbox_WildernessSurvivor_RPGSessionStressReduction_tooltip": "Stress removed from each participant at every interval."
 }
