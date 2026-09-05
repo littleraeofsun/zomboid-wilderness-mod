@@ -24,5 +24,5 @@
   "Sandbox_WildernessSurvivor_RPGSessionUnhappinessReduction": "RPG Session Unhappiness Reduction",
   "Sandbox_WildernessSurvivor_RPGSessionUnhappinessReduction_tooltip": "Unhappiness removed from each participant at every interval.",
   "Sandbox_WildernessSurvivor_RPGSessionStressReduction": "RPG Session Stress Reduction",
-  "Sandbox_WildernessSurvivor_RPGSessionStressReduction_tooltip": "Stress removed from each participant at every interval."
+  "Sandbox_WildernessSurvivor_RPGSessionStressReduction_tooltip": "Stress removed from each participant at every interval, expressed as a 0-100 percentage."
 }

@@ -107,16 +107,11 @@ local function applySoloBulkDiceBonus(player, rpgManual)
         print("    applySoloBulkDiceBonus() - totalMinutes: " .. tostring(totalMinutes) .. " | rpgInterval: " .. tostring(rpgInterval) .. " | intervalCount: " .. tostring(intervalCount))
 
         local unhappinessReduction = RPGSessionRules.getRPGSessionUnhappinessReduction() * intervalCount
-        local stressReduction = RPGSessionRules.getRPGSessionStressReduction() * intervalCount
+        local stressReduction = RPGSessionRules.getRPGSessionStressReduction() / 100 * intervalCount
+        local stats = player:getStats()
 
-        player:getStats():remove(
-            CharacterStat.UNHAPPINESS,
-            RPGSessionRules.getRPGSessionUnhappinessReduction() * intervalCount
-        )
-        player:getStats():remove(
-            CharacterStat.STRESS,
-            RPGSessionRules.getRPGSessionStressReduction() * intervalCount
-        )
+        stats:remove(CharacterStat.UNHAPPINESS, unhappinessReduction)
+        stats:setStress(math.max(0, stats:getStress() - stressReduction))
 
         print("    applySoloBulkDiceBonus() - unhappiness reduced by " .. tostring(unhappinessReduction) .. " | stress reduced by " .. tostring(stressReduction))
     end

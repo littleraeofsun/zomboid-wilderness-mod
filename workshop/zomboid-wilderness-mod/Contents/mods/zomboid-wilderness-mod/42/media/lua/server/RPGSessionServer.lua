@@ -73,14 +73,15 @@ end
 -- =========================================================
 
 local function applyDiceBonus(player)
-    player:getStats():remove(
+    local stats = player:getStats()
+
+    stats:remove(
         CharacterStat.UNHAPPINESS,
         RPGSessionRules.getRPGSessionUnhappinessReduction()
     )
-    player:getStats():remove(
-        CharacterStat.STRESS,
-        RPGSessionRules.getRPGSessionStressReduction()
-    )
+
+    local stressReduction = RPGSessionRules.getRPGSessionStressReduction() / 100
+    stats:setStress(math.max(0, stats:getStress() - stressReduction))
 end
 
 -- ========================================================
@@ -153,12 +154,13 @@ Events.OnClientCommand.Add(onClientCommand)
 
 local function everyMinute()
     -- exit if RPG sessions are disabled or if there are no online players
+    local onlinePlayers = getOnlinePlayers()
     if not RPGSessionRules.isRPGSessionEnabled()
-    or not getOnlinePlayers() then
+    or not onlinePlayers or onlinePlayers:size() == 0 then
         return
     end
 
-    print("RPGSessionRules: everyMinute() - processing active RPG sessions for " .. tostring(getOnlinePlayers():size()) .. " online players.")
+    print("RPGSessionRules: everyMinute() - processing active RPG sessions for " .. tostring(onlinePlayers:size()) .. " online players.")
 
     for readerID, session in pairs(activeReaders) do
         local reader = getOnlinePlayerByID(readerID)
