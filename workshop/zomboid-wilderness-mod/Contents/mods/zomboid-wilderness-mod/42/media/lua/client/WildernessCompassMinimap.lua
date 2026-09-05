@@ -90,6 +90,10 @@ local function update(player)
 end
 
 local function onCreatePlayer(playerNum, player)
+    if WildernessSurvivalRules.getCompassMinimapMode() == "Disabled" then
+        return
+    end
+
     print("WildernessSurvivalRules: onCreatePlayer() called for playerNum " .. tostring(playerNum) .. " and player " .. tostring(player))
     playerHadCompass[playerNum] = false
     setMiniMapVisible(playerNum, false)
@@ -113,12 +117,15 @@ local function registerCompassEvents()
         return
     end
 
-    Events.OnCreatePlayer.Add(onCreatePlayer)
     Events.OnRefreshInventoryWindowContainers.Add(onInventoryRefresh)
     Events.EveryOneMinute.Add(onMinute)
+    update(getSpecificPlayer(0))
     print("WildernessSurvivalRules: Compass minimap mode is enabled, registered events.")
 end
 
+-- ISMiniMap registers its player-creation handler while it is required above, so this
+-- handler runs afterward and can hide the vanilla-created minimap before it is drawn.
+Events.OnCreatePlayer.Add(onCreatePlayer)
 Events.OnGameStart.Add(registerCompassEvents)
 
 --========================================================
@@ -127,22 +134,9 @@ Events.OnGameStart.Add(registerCompassEvents)
 local originalIsMiniMapAllowed = ISMiniMap.IsAllowed
 
 function ISMiniMap.IsAllowed()
-    -- Preserve vanilla restrictions first.
-    if not originalIsMiniMapAllowed() then
-        return false
-    end
-
-    local mode = WildernessSurvivalRules.getCompassMinimapMode()
-    if mode == "Disabled" then
-        return true -- vanilla behavior would be true here, so return true
-    end
-
-    local player = getSpecificPlayer(0)
-    if not player then
-        return false
-    end
-
-    return playerHasCompass(player, mode == "Anywhere")
+    -- This controls vanilla minimap creation. Possession is enforced through visibility
+    -- and ToggleMiniMap below, after vanilla has created the UI instance.
+    return originalIsMiniMapAllowed()
 end
 
 local originalToggleMiniMap = ISMiniMap.ToggleMiniMap
