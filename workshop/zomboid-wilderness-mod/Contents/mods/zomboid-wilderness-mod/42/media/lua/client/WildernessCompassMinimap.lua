@@ -89,15 +89,33 @@ local function update(player)
     setMiniMapVisible(playerNum, hasCompass)
 end
 
+local function enforceInitialMiniMapVisibility(playerNum, player)
+    local attempts = 0
+
+    local function initialize()
+        attempts = attempts + 1
+
+        if WildernessSurvivalRules.getCompassMinimapMode() == "Disabled" then
+            Events.OnTick.Remove(initialize)
+        elseif getPlayerMiniMap(playerNum) ~= nil then
+            Events.OnTick.Remove(initialize)
+            playerHadCompass[playerNum] = nil
+            update(player)
+        elseif attempts >= 100 then
+            Events.OnTick.Remove(initialize)
+        end
+    end
+
+    Events.OnTick.Add(initialize)
+end
+
 local function onCreatePlayer(playerNum, player)
-    if WildernessSurvivalRules.getCompassMinimapMode() == "Disabled" then
+    if not player then
         return
     end
 
     print("WildernessSurvivalRules: onCreatePlayer() called for playerNum " .. tostring(playerNum) .. " and player " .. tostring(player))
-    playerHadCompass[playerNum] = false
-    setMiniMapVisible(playerNum, false)
-    update(player)
+    enforceInitialMiniMapVisibility(playerNum, player)
 end
 
 local function onInventoryRefresh(inventoryPage, reason)
@@ -119,7 +137,12 @@ local function registerCompassEvents()
 
     Events.OnRefreshInventoryWindowContainers.Add(onInventoryRefresh)
     Events.EveryOneMinute.Add(onMinute)
-    update(getSpecificPlayer(0))
+
+    -- The minimap can be created after player and game-start events.
+    local player = getSpecificPlayer(0)
+    if player then
+        enforceInitialMiniMapVisibility(0, player)
+    end
     print("WildernessSurvivalRules: Compass minimap mode is enabled, registered events.")
 end
 

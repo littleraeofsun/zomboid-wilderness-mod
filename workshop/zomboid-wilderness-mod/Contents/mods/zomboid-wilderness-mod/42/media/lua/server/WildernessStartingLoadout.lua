@@ -1,19 +1,39 @@
 require "WildernessStartingLoadoutRules"
 
+local function addItem(inventory, itemType)
+    local item = inventory:AddItem(itemType)
+    if item then
+        sendAddItemToContainer(inventory, item)
+    end
+    return item
+end
+
+local function removeAllNonClothingItems(player)
+    local inventory = player:getInventory()
+    local items = inventory:getItems()
+    for index = items:size() - 1, 0, -1 do
+        local item = items:get(index)
+        if not item:IsClothing() then
+            inventory:Remove(item)
+            sendRemoveItemFromContainer(inventory, item)
+        end
+    end
+end
+
 local function addHawksLoadout(player)
     local inventory = player:getInventory()
-    inventory:AddItem("Base.ChickenFeather")
-    inventory:AddItem("Base.Cudgel_Nails")
-    inventory:AddItem("Base.RPGmanual")
-    local dicePouch = inventory:AddItem("Base.SeedBag")
+    addItem(inventory, "Base.ChickenFeather")
+    addItem(inventory, "Base.Cudgel_Nails")
+    addItem(inventory, "Base.RPGmanual")
+    local dicePouch = addItem(inventory, "Base.SeedBag")
     local pouchInventory = dicePouch:getInventory()
-    pouchInventory:AddItem("Base.Dice_4")
-    pouchInventory:AddItem("Base.Dice_6")
-    pouchInventory:AddItem("Base.Dice_8")
-    pouchInventory:AddItem("Base.Dice_10")
-    pouchInventory:AddItem("Base.Dice_12")
-    pouchInventory:AddItem("Base.Dice_20")
-    pouchInventory:AddItem("Base.Dice_00")
+    addItem(pouchInventory, "Base.Dice_4")
+    addItem(pouchInventory, "Base.Dice_6")
+    addItem(pouchInventory, "Base.Dice_8")
+    addItem(pouchInventory, "Base.Dice_10")
+    addItem(pouchInventory, "Base.Dice_12")
+    addItem(pouchInventory, "Base.Dice_20")
+    addItem(pouchInventory, "Base.Dice_00")
 end
 
 local function applyMultiplayerStartingLoadout(player)
@@ -32,7 +52,7 @@ local function applyMultiplayerStartingLoadout(player)
         return
     end
         
-    WildernessStartingLoadoutRules.removeAllNonClothingItems(player)
+    removeAllNonClothingItems(player)
 
     print("    applyMultiplayerStartingLoadout() - removed all non-clothing items from player ")
 
@@ -50,7 +70,7 @@ local function applyMultiplayerStartingLoadout(player)
 
     print("    applyMultiplayerStartingLoadout() - adding starting items for preset " .. preset)
     for _, item in ipairs(startingItems) do
-        player:getInventory():AddItem(item)
+        addItem(player:getInventory(), item)
     end
 
     -- Hawks clause <3

@@ -49,20 +49,38 @@ Events.OnNewGame.Add(onNewGame)
 -- ========================================================
 -- Handle applying starting loadout for multiplayer games
 -- ========================================================
-local function onCreatePlayer(playerIndex, player)
-    -- exit if player is nil or if this is a NOT client/server multiplayer game (we only want to apply the loadout on the server in multiplayer)
-    if player == nil or not isClient() or not WildernessStartingLoadoutRules.shouldUseCustomStartingItems() then
-        print("WildernessStartingLoadout: onCreatePlayer() - exiting early; player: " .. tostring(player) .. ", isClient: " .. tostring(isClient()) .. ", shouldUseCustomStartingItems: " .. tostring(WildernessStartingLoadoutRules.shouldUseCustomStartingItems()))
+local function onGameStart()
+    if not isClient() then
         return
     end
 
-    print("WildernessStartingLoadout: onCreatePlayer() - this IS a client/server multiplayer game, handing loadout application to server.")
-    sendClientCommand(
-        player,
-        WildernessStartingLoadoutRules.MP_MODULE.NAME,
-        WildernessStartingLoadoutRules.MP_MODULE.EVENTS.APPLY_STARTING_LOADOUT,
-        {}
-    )
+    local player = getSpecificPlayer(0)
+    if not player then
+        return
+    end
+
+    local function awaitStartingLoadout()
+        -- Wait until character creation and the initial inventory sync have completed.
+        if WildernessSurvivalRules.getSandboxSettings() == nil then
+            return
+        end
+
+        Events.OnTick.Remove(awaitStartingLoadout)
+
+        if not WildernessStartingLoadoutRules.shouldUseCustomStartingItems() then
+            return
+        end
+
+        print("WildernessStartingLoadout: requesting multiplayer starting loadout for player " .. player:getUsername())
+        sendClientCommand(
+            player,
+            WildernessStartingLoadoutRules.MP_MODULE.NAME,
+            WildernessStartingLoadoutRules.MP_MODULE.EVENTS.APPLY_STARTING_LOADOUT,
+            {}
+        )
+    end
+
+    Events.OnTick.Add(awaitStartingLoadout)
 end
 
-Events.OnCreatePlayer.Add(onCreatePlayer)
+Events.OnGameStart.Add(onGameStart)
