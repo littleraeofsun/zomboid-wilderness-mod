@@ -41,12 +41,33 @@ zomboid-wilderness-mod/
 
 ## Lua modules
 
-- `shared/WildernessSurvivalRules.lua` contains the shared wilderness rules, sandbox-setting accessors, starting-loadout definitions, and minimap modes.
-- `client/WildernessSleepRestriction.lua` enforces the eligible sleeping-location rule.
-- `client/WildernessStartingLoadout.lua` applies the selected starting-loadout preset to new characters.
-- `client/WildernessCompassMinimap.lua` requires a compass before displaying the minimap when enabled.
-- `client/RPGSessionClient.lua` is the client-side RPG Session feature stub.
-- `server/RPGSessionServer.lua` is the server-side RPG Session feature stub.
+### `/shared`
+- `/WildernessSurvivalRules.lua` contains the shared wilderness rules, sandbox-setting accessors, and sleep restriction and minimap modes.
+- `/RPGSessionRules.lua` contains the shared logic specifically for the RPG Session feature.
+- `/WildernessStartingLoadoutRule.lua` contains the shared logic specifically for the Starting Loadout feature.
+
+### `/client`
+
+- `/RPGSessionClient.lua` is the client-side RPG Session feature stub. Client and server are coupled.
+- `/WildernessCompassMinimap.lua` requires a compass before displaying the minimap when enabled.
+- `/WildernessSleepRestriction.lua` enforces the eligible sleeping-location rule.
+- `/WildernessStartingLoadout.lua` applies the selected starting-loadout preset to new characters. Client and server are orthogonal.
+
+### `/server`
+- `/RPGSessionServer.lua` handles RPG Session feature for multiplayer games. Client and server are coupled.
+- `/WildernessStartingLoadout.lua` handles starting-loadout application for multiplayer games. Client and server are orthogonal.
+
+## RPG Session
+
+Reading an RPG Manual starts an RPG Session. Every configured interval, the reader and any online player on the same floor within the configured tile range receive the configured unhappiness and stress reductions if they carry at least one die, including dice in containers. The feature and its range, interval, and rewards are configurable in the Wilderness Survivor sandbox settings.
+
+## Compass opens minimap
+
+The `Compass Opens Minimap` sandbox setting controls whether a compass is required to display the minimap:
+
+- `Disabled` leaves the normal game minimap behavior unchanged.
+- `Main Inventory` requires a compass in the player's main inventory, including equipped or attached compasses.
+- `Anywhere` allows a compass stored anywhere on the player, including bags and other containers.
 
 ## Sleep shelter rule
 
@@ -58,18 +79,6 @@ The mod permits sleeping in tents. At every other sleep attempt, it permits slee
 
 The sandbox now includes a starting-items preset:
 
-- `Default` keeps vanilla starting items and doesn't change anything.
-- `Wilderness Glamper`, `Stranded Hiker`, and `Naked and Afraid` are stubbed with wilderness-focused starts.
+- `Vanilla` keeps vanilla starting item settings and doesn't change anything.
+- `Wilderness Glamper`, `Stranded Hiker`, and `Naked and Afraid` are configured with wilderness-focused starts.
 - The custom presets remove non-clothing items on spawn, and `Naked and Afraid` also strips clothing.
-
-## Compass opens minimap
-
-The `Compass Opens Minimap` sandbox setting controls whether a compass is required to display the minimap:
-
-- `Disabled` leaves the normal game minimap behavior unchanged.
-- `Main Inventory` requires a compass in the player's main inventory, including equipped or attached compasses.
-- `Anywhere` allows a compass stored anywhere on the player, including bags and other containers.
-
-## RPG Session
-
-Reading an RPG Manual starts an RPG Session. Every configured interval, the reader and any online player on the same floor within the configured tile range receive the configured unhappiness and stress reductions if they carry at least one die, including dice in containers. The feature and its range, interval, and rewards are configurable in the Wilderness Survivor sandbox settings.

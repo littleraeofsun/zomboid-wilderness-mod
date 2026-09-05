@@ -15,6 +15,8 @@
   "Sandbox_WildernessSurvivor_CompassOpensMinimap_Values_option3": "Anywhere",
   "Sandbox_WildernessSurvivor_EnableRPGSession": "Enable RPG Session",
   "Sandbox_WildernessSurvivor_EnableRPGSession_tooltip": "Allow nearby players carrying dice to gain mood benefits while an RPG Manual is being read.",
+  "Sandbox_WildernessSurvivor_RPGManualReadTime": "RPG Manual read time (minutes)",
+  "Sandbox_WildernessSurvivor_RPGManualReadTime_tooltip": "Vanilla rules have the player read the manual for 10 minutes. This overrides that to simulate a more realistic session length.",
   "Sandbox_WildernessSurvivor_RPGSessionRange": "RPG Session Range",
   "Sandbox_WildernessSurvivor_RPGSessionRange_tooltip": "Maximum distance in tiles from the reader for players carrying dice to participate.",
   "Sandbox_WildernessSurvivor_RPGSessionInterval": "RPG Session Interval",

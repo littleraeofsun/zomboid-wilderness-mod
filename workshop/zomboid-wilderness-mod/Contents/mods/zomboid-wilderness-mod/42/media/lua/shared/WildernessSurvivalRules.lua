@@ -3,48 +3,10 @@ WildernessSurvivalRules = WildernessSurvivalRules or {}
 WildernessSurvivalRules.DENIAL_TEXT = "You can't sleep here. Find shelter in the wilderness or a structure built by survivors."
 WildernessSurvivalRules.SANDBOX_TABLE = "WildernessSurvivor"
 
-WildernessSurvivalRules.STARTING_ITEMS_PRESETS = {
-    [1] = "Vanilla",
-    [2] = "Wilderness Glamper",
-    [3] = "Stranded Hiker",
-    [4] = "Naked and Afraid",
-}
 WildernessSurvivalRules.COMPASS_MINIMAP_MODES = {
     [1] = "Disabled",
     [2] = "Main Inventory",
     [3] = "Anywhere",
-}
-WildernessSurvivalRules.STARTING_ITEMS = {
-    ["Wilderness Glamper"] = {
-        "Base.Bag_BigHikingBag",
-        "Base.TentGreen_Packed",
-        "Base.SleepingBag_Green_Packed",
-        "Base.Multitool",
-        "Base.Pot",
-        "Base.WaterBottle",
-        "Base.GranolaBar",
-        "Base.GranolaBar",
-        "Base.Bandage",
-        "Base.Bandaid",
-        "Base.Bandaid",
-        "Base.MagnesiumFirestarter",
-        "Base.CompassDirectional",
-        "Base.WaterPurificationTablets",
-        "Base.InsectRepellent",
-        "Base.Spork",
-        "Base.Torch",
-        "Base.Battery",
-        "Base.DigitalWatch2",
-     },
-    ["Stranded Hiker"] = { 
-        "Base.Bag_NormalHikingBag",
-        "Base.Tarp",
-        "Base.HuntingKnife",
-        "Base.Pot",
-        "Base.WaterBottle",
-        "Base.GranolaBar",
-    },
-    ["Naked and Afraid"] = {},
 }
 
 function WildernessSurvivalRules.getSandboxSettings()
@@ -106,30 +68,6 @@ function WildernessSurvivalRules.canSleepAt(player, bed)
         or WildernessSurvivalRules.isPlayerBuiltShelter(square)
 end
 
-function WildernessSurvivalRules.getStartingItemsPreset()
-    local settings = WildernessSurvivalRules.getSandboxSettings()
-    if settings ~= nil then
-        local preset = settings.StartingItemsPreset
-        if WildernessSurvivalRules.STARTING_ITEMS_PRESETS[preset] ~= nil then
-            return WildernessSurvivalRules.STARTING_ITEMS_PRESETS[preset]
-        end
-        if WildernessSurvivalRules.STARTING_ITEMS[preset] ~= nil or preset == "Vanilla" then
-            return preset
-        end
-    end
-
-    return "Vanilla"
-end
-
-function WildernessSurvivalRules.shouldUseCustomStartingItems()
-    return WildernessSurvivalRules.getStartingItemsPreset() ~= "Vanilla"
-end
-
-function WildernessSurvivalRules.getStartingItemsForPreset()
-    local preset = WildernessSurvivalRules.getStartingItemsPreset()
-    return WildernessSurvivalRules.STARTING_ITEMS[preset]
-end
-
 function WildernessSurvivalRules.getCompassMinimapMode()
     local settings = WildernessSurvivalRules.getSandboxSettings()
     if settings ~= nil then
@@ -143,36 +81,4 @@ function WildernessSurvivalRules.getCompassMinimapMode()
     end
 
     return "Disabled"
-end
-
-local rpgModule = {
-    NAME = "WildernessSurvivor_RPGSession",
-    EVENT_START = "RPGReadingStart",
-    EVENT_STOP = "RPGReadingStop",
-}
-WildernessSurvivalRules.RPG_SESSION_MODULE = rpgModule
-
-function WildernessSurvivalRules.isRPGSessionEnabled()
-    local settings = WildernessSurvivalRules.getSandboxSettings()
-    return settings == nil or settings.EnableRPGSession ~= false
-end
-
-function WildernessSurvivalRules.getRPGSessionRange()
-    local settings = WildernessSurvivalRules.getSandboxSettings()
-    return settings ~= nil and settings.RPGSessionRange or 3
-end
-
-function WildernessSurvivalRules.getRPGSessionInterval()
-    local settings = WildernessSurvivalRules.getSandboxSettings()
-    return settings ~= nil and settings.RPGSessionInterval or 5
-end
-
-function WildernessSurvivalRules.getRPGSessionUnhappinessReduction()
-    local settings = WildernessSurvivalRules.getSandboxSettings()
-    return settings ~= nil and settings.RPGSessionUnhappinessReduction or 3
-end
-
-function WildernessSurvivalRules.getRPGSessionStressReduction()
-    local settings = WildernessSurvivalRules.getSandboxSettings()
-    return settings ~= nil and settings.RPGSessionStressReduction or 2
 end
