@@ -1,103 +1,68 @@
-require "WildernessSurvivalRules"
+require "WildernessStartingLoadoutRules"
 
-local function removeAllNonClothingItems(player)
-    local inventory = player:getInventory()
-    local items = inventory:getItems()
-    for index = items:size() - 1, 0, -1 do
-        local item = items:get(index)
-        if not item:IsClothing() then
-            inventory:Remove(item)
-        end
-    end
-end
-
-local function stripAllClothing(player)
-    local clothing = player:getWornItems()
-    local count = clothing:size()
-    for index = count - 1, 0, -1 do
-        player:removeWornItem(clothing:get(index):getItem())
-    end
-end
-
-local function addLoadoutWithBackpack(player, items, backpackType)
-    local inventory = player:getInventory()
-    local backpack = inventory:AddItem(backpackType)
-    player:setWornItem("Back", backpack)
-
-    local backpackInventory = backpack:getItemContainer()
-    for index = 1, #items do
-        local itemType = items[index]
-        if itemType ~= backpackType then
-            local item = inventory:AddItem(itemType)
-            if itemType ~= "Base.WaterBottle" then
-                backpackInventory:AddItem(item)
-            end
-        end
-    end
-
-    return backpackInventory
-end
-
-local function addHawksLoadout(player, backpackInventory)
-    local inventory = player:getInventory()
-    local chickenFeather = inventory:AddItem("Base.ChickenFeather")
-    local cudgel = inventory:AddItem("Base.Cudgel_Nails")
-    local rpgBook = inventory:AddItem("Base.RPGmanual")
-    local dicePouch = inventory:AddItem("Base.SeedBag")
-    local pouchInventory = dicePouch:getInventory()
-    pouchInventory:AddItem("Base.Dice_4")
-    pouchInventory:AddItem("Base.Dice_6")
-    pouchInventory:AddItem("Base.Dice_8")
-    pouchInventory:AddItem("Base.Dice_10")
-    pouchInventory:AddItem("Base.Dice_12")
-    pouchInventory:AddItem("Base.Dice_20")
-    pouchInventory:AddItem("Base.Dice_00")
-
-    if backpackInventory ~= nil then
-        backpackInventory:AddItem(chickenFeather)
-        backpackInventory:AddItem(cudgel)
-        backpackInventory:AddItem(rpgBook)
-        backpackInventory:AddItem(dicePouch)
-    end
-end
-
-local function applyStartingLoadout(playerIndex, player)
-    if player == nil then
+local function applySoloStartingLoadout(player)
+    if not WildernessStartingLoadoutRules.shouldUseCustomStartingItems() then
+        print("WildernessStartingLoadout: applySoloStartingLoadout() - sandbox setting is disabled, skipping loadout application.")
         return
     end
 
-    local username = player:getUsername()
-    local isHawks = username ~= nil and string.find(string.lower(username), "hawks", 1, true) ~= nil
-    local preset = WildernessSurvivalRules.getStartingItemsPreset()
-    if preset == "Vanilla" then
-        return
-    end
+    print("WildernessStartingLoadout: applySoloStartingLoadout() - applying starting loadout for player " .. player:getUsername())
+        
+    WildernessStartingLoadoutRules.removeAllNonClothingItems(player)
 
-    removeAllNonClothingItems(player)
+    print("    applySoloStartingLoadout() - removed all non-clothing items from player ")
 
-    local items = WildernessSurvivalRules.getStartingItemsForPreset()
-    local backpackInventory = nil
-    if items ~= nil then
-        if preset == "Wilderness Glamper" then
-            backpackInventory = addLoadoutWithBackpack(player, items, "Base.Bag_BigHikingBag")
-            local wipes = backpackInventory:AddItem("Base.AlcoholWipes")
-            wipes:setUsedDelta(0.4)
-        elseif preset == "Stranded Hiker" then
-            backpackInventory = addLoadoutWithBackpack(player, items, "Base.Bag_NormalHikingBag")
-        else
-            for index = 1, #items do
-                player:getInventory():AddItem(items[index])
-            end
-        end
-    end
-
-    if isHawks then
-        addHawksLoadout(player, backpackInventory)
-    end
-
+    local preset = WildernessStartingLoadoutRules.getStartingItemsPreset()
     if preset == "Naked and Afraid" then
-        stripAllClothing(player)
+        WildernessStartingLoadoutRules.stripAllClothing(player)
+        print("    applySoloStartingLoadout() - stripped all clothing from player ")
+    end    
+
+    local startingItems = WildernessStartingLoadoutRules.getStartingItemsForPreset(preset)
+    if startingItems == nil then
+        print("    applySoloStartingLoadout() - no starting items found for preset " .. preset)
+        return
+    end
+
+    print("    applySoloStartingLoadout() - adding starting items for preset " .. preset)
+    for _, item in ipairs(startingItems) do
+        player:getInventory():AddItem(item)
     end
 end
 
-Events.OnCreatePlayer.Add(applyStartingLoadout)
+-- ========================================================
+-- Handle applying starting loadout for single player games
+-- ========================================================
+local function onNewGame(player)
+    -- exit if player is nil
+    if player == nil or isClient() or not WildernessStartingLoadoutRules.shouldUseCustomStartingItems() then
+        print("WildernessStartingLoadout: onNewGame() - exiting early; player: " .. tostring(player) .. ", isClient: " .. tostring(isClient()) .. ", shouldUseCustomStartingItems: " .. tostring(WildernessStartingLoadoutRules.shouldUseCustomStartingItems()))
+        return
+    end
+
+    print("WildernessStartingLoadout: onNewGame() - this is a single player game, applying starting loadout for player " .. player:getUsername())
+    applySoloStartingLoadout(player) 
+end
+
+Events.OnNewGame.Add(onNewGame)
+
+-- ========================================================
+-- Handle applying starting loadout for multiplayer games
+-- ========================================================
+local function onCreatePlayer(playerIndex, player)
+    -- exit if player is nil or if this is a NOT client/server multiplayer game (we only want to apply the loadout on the server in multiplayer)
+    if player == nil or not isClient() or not WildernessStartingLoadoutRules.shouldUseCustomStartingItems() then
+        print("WildernessStartingLoadout: onCreatePlayer() - exiting early; player: " .. tostring(player) .. ", isClient: " .. tostring(isClient()) .. ", shouldUseCustomStartingItems: " .. tostring(WildernessStartingLoadoutRules.shouldUseCustomStartingItems()))
+        return
+    end
+
+    print("WildernessStartingLoadout: onCreatePlayer() - this IS a client/server multiplayer game, handing loadout application to server.")
+    sendClientCommand(
+        player,
+        WildernessStartingLoadoutRules.MP_MODULE.NAME,
+        WildernessStartingLoadoutRules.MP_MODULE.EVENTS.APPLY_STARTING_LOADOUT,
+        {}
+    )
+end
+
+Events.OnCreatePlayer.Add(onCreatePlayer)

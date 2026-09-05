@@ -1,46 +1,14 @@
-require "WildernessSurvivalRules"
+-- =========================================================
+-- This feature has a tightly coupled client/server implementation for multiplayer games.
+-- For single player games, only client-side logic is required.
+-- =========================================================
 
-local DICE_TYPES = {
-    "Base.Dice",
-    "Base.Dice_4",
-    "Base.Dice_6",
-    "Base.Dice_8",
-    "Base.Dice_10",
-    "Base.Dice_12",
-    "Base.Dice_20",
-    "Base.Dice_00",
-    "Base.Dice_Bone",
-    "Base.Dice_Wood",
-}
+require "RPGSessionRules"
 
+local playerHasDice = RPGSessionRules.playerHasDice
 
 -- Active sessions indexed by the reader's online ID.
 local activeReaders = {}
-
-
--- =========================================================
--- Does this player possess any usable die?
---
--- containsTypeRecurse() means dice inside backpacks,
--- pouches, etc. still count.
--- =========================================================
-
-local function hasDice(player)
-    if not player then
-        return false
-    end
-
-    local inventory = player:getInventory()
-
-    for _, diceType in ipairs(DICE_TYPES) do
-        if inventory:containsTypeRecurse(diceType) then
-            return true
-        end
-    end
-
-    return false
-end
-
 
 -- =========================================================
 -- Is participant within the 3-tile activity area?
@@ -71,8 +39,30 @@ local function isWithinDiceRange(reader, player)
     local dx = math.abs(reader:getX() - player:getX())
     local dy = math.abs(reader:getY() - player:getY())
 
-    return dx <= WildernessSurvivalRules.getRPGSessionRange()
-        and dy <= WildernessSurvivalRules.getRPGSessionRange()
+    return dx <= RPGSessionRules.getRPGSessionRange()
+        and dy <= RPGSessionRules.getRPGSessionRange()
+end
+
+
+-- ========================================================
+-- Get online player by ID (to determing if a cached reader is still online).
+-- ========================================================
+local function getOnlinePlayerByID(onlineID)
+    local players = getOnlinePlayers()
+
+    if not players then
+        return nil
+    end
+
+    for i = 0, players:size() - 1 do
+        local player = players:get(i)
+
+        if player and player:getOnlineID() == onlineID then
+            return player
+        end
+    end
+
+    return nil
 end
 
 
@@ -85,12 +75,36 @@ end
 local function applyDiceBonus(player)
     player:getStats():remove(
         CharacterStat.UNHAPPINESS,
-        WildernessSurvivalRules.getRPGSessionUnhappinessReduction()
+        RPGSessionRules.getRPGSessionUnhappinessReduction()
     )
     player:getStats():remove(
         CharacterStat.STRESS,
-        WildernessSurvivalRules.getRPGSessionStressReduction()
+        RPGSessionRules.getRPGSessionStressReduction()
     )
+end
+
+-- ========================================================
+-- Apply dice-session mood benefit to all participants within range of the reader.
+-- ========================================================
+
+local function applySession(reader)
+    local onlinePlayers = getOnlinePlayers()
+
+    print("RPGSessionRules: applySession() called for " .. tostring(onlinePlayers:size()) .. " online players.")
+
+    for i = 0, onlinePlayers:size() - 1 do
+        local participant = onlinePlayers:get(i)
+
+        print("    applySession() - checking participant " .. tostring(participant:getUsername()) .. " (ID: " .. tostring(participant:getOnlineID()) .. ")")
+
+        if participant
+        and isWithinDiceRange(reader, participant)
+        and playerHasDice(participant) then
+
+            applyDiceBonus(participant)
+
+        end
+    end
 end
 
 
@@ -99,23 +113,33 @@ end
 -- =========================================================
 
 local function onClientCommand(module, command, player, args)
-    if module ~= WildernessSurvivalRules.RPG_SESSION_MODULE.NAME then
+    if module ~= RPGSessionRules.MP_MODULE.NAME then
         return
     end
 
     local playerID = player:getOnlineID()
 
-    if command == WildernessSurvivalRules.RPG_SESSION_MODULE.EVENT_START
-        and WildernessSurvivalRules.isRPGSessionEnabled() then
+    if player:isDead() then
+        activeReaders[playerID] = nil
+        return
+    end
+
+    if command == RPGSessionRules.MP_MODULE.EVENTS.READING_START
+        and RPGSessionRules.isRPGSessionEnabled() then
 
         activeReaders[playerID] = {
             player = player,
             elapsedMinutes = 0
         }
 
-    elseif command == WildernessSurvivalRules.RPG_SESSION_MODULE.EVENT_STOP then
+    elseif command == RPGSessionRules.MP_MODULE.EVENTS.READING_STOP then
 
         activeReaders[playerID] = nil
+
+    elseif command == RPGSessionRules.MP_MODULE.EVENTS.READING_COMPLETE then
+        
+        activeReaders[playerID] = nil
+        applySession(player) -- apply final bonus for completing the session
 
     end
 end
@@ -128,39 +152,30 @@ Events.OnClientCommand.Add(onClientCommand)
 -- =========================================================
 
 local function everyMinute()
-    if not WildernessSurvivalRules.isRPGSessionEnabled() then
+    -- exit if RPG sessions are disabled or if there are no online players
+    if not RPGSessionRules.isRPGSessionEnabled()
+    or not getOnlinePlayers() then
         return
     end
 
-    local onlinePlayers = getOnlinePlayers()
-
-    if not onlinePlayers then
-        return
-    end
+    print("RPGSessionRules: everyMinute() - processing active RPG sessions for " .. tostring(getOnlinePlayers():size()) .. " online players.")
 
     for readerID, session in pairs(activeReaders) do
-        local reader = session.player
+        local reader = getOnlinePlayerByID(readerID)
 
-        if not reader then
+        if not reader or reader:isDead() then
+            print("    everyMinute() - reader " .. tostring(readerID) .. " is no longer online or is dead, removing from active readers.")
             activeReaders[readerID] = nil
 
         else
             session.elapsedMinutes = session.elapsedMinutes + 1
 
-            if session.elapsedMinutes >= WildernessSurvivalRules.getRPGSessionInterval() then
+            print("    everyMinute() - reader " .. tostring(readerID) .. " has been reading for " .. tostring(session.elapsedMinutes) .. " minutes.")
+
+            -- apply bonus if the session has reached the configured interval
+            if session.elapsedMinutes >= RPGSessionRules.getRPGSessionInterval() then
                 session.elapsedMinutes = 0
-
-                for i = 0, onlinePlayers:size() - 1 do
-                    local participant = onlinePlayers:get(i)
-
-                    if participant
-                    and isWithinDiceRange(reader, participant)
-                    and hasDice(participant) then
-
-                        applyDiceBonus(participant)
-
-                    end
-                end
+                applySession(reader)
             end
         end
     end
