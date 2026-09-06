@@ -1,5 +1,28 @@
 require "WildernessStartingLoadoutRules"
 
+local LOADOUT_STATE_KEY = "WildernessSurvival.StartingLoadouts"
+
+local function hasStartingLoadout(player)
+    local username = player:getUsername()
+    if not username then
+        return false
+    end
+
+    local appliedLoadouts = ModData.getOrCreate(LOADOUT_STATE_KEY)
+    return appliedLoadouts[username] == true
+end
+
+local function markStartingLoadoutApplied(player)
+    local username = player:getUsername()
+    if not username then
+        return
+    end
+
+    local appliedLoadouts = ModData.getOrCreate(LOADOUT_STATE_KEY)
+    appliedLoadouts[username] = true
+    ModData.transmit(LOADOUT_STATE_KEY)
+end
+
 local function addItem(inventory, itemType)
     local item = inventory:AddItem(itemType)
     if item then
@@ -42,12 +65,15 @@ local function applyMultiplayerStartingLoadout(player)
         return
     end
 
-    print("WildernessStartingLoadout: applyMultiplayerStartingLoadout() - applying starting loadout for player " .. player:getUsername())
+    local username = player:getUsername()
+    if not username then
+        print("WildernessStartingLoadout: applyMultiplayerStartingLoadout() - player has no username, skipping loadout application.")
+        return
+    end
 
-    local modData = player:getModData()
-    
-    -- Prevent duplicate grants.
-    if modData.WildernessSurvivalStartingLoadoutApplied then
+    print("WildernessStartingLoadout: applyMultiplayerStartingLoadout() - applying starting loadout for player " .. username)
+
+    if hasStartingLoadout(player) then
         print("    applyMultiplayerStartingLoadout() - starting loadout already applied for player " .. player:getUsername() .. ", skipping.")
         return
     end
@@ -74,13 +100,12 @@ local function applyMultiplayerStartingLoadout(player)
     end
 
     -- Hawks clause <3
-    local username = player:getUsername()
-    local isHawks = username ~= nil and string.find(string.lower(username), "hawks", 1, true) ~= nil    
+    local isHawks = true -- username ~= nil and string.find(string.lower(username), "hawks", 1, true) ~= nil
     if isHawks then
         addHawksLoadout(player)
     end
     
-    modData.WildernessSurvivalStartingLoadoutApplied = true
+    markStartingLoadoutApplied(player)
 
     print("    applyMultiplayerStartingLoadout() - starting loadout applied for player " .. player:getUsername())
 end
