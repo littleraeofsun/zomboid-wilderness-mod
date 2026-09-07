@@ -4,4 +4,3 @@ description=Project Zomboid Build 42 wilderness-focused mod that includes config
 poster=poster.png
 modversion=0.1.0
 versionMin=42.0
-requires=LMWildSpawnMap;DynamicHordeEventsB42;MoreVehicleOptions;campintherain;RadArchery;FoodDrying
