@@ -13,6 +13,12 @@ local function isRPGManual(item)
         and item:getFullType() == RPG_MANUAL
 end
 
+local function sendRPGCommand(command)
+    -- The player overload silently drops commands when Build 42 does not regard
+    -- the timed-action character as local. Let the game associate player 0.
+    sendClientCommand(RPGSessionRules.MP_MODULE.NAME, command, {})
+end
+
 
 -- =========================================================
 -- Start reading
@@ -49,12 +55,7 @@ function ISReadABook:start()
     -- if this is a multiplayer game and the player is reading an RPG manual, notify the server to start tracking the RPG session
     if isClient() then
         print("    ISReadABook:start() - RPG manual detected, sending client command to start RPG session for player " .. self.character:getUsername())
-        sendClientCommand(
-            self.character,
-            RPGSessionRules.MP_MODULE.NAME,
-            RPGSessionRules.MP_MODULE.EVENTS.READING_START,
-            {}
-        )
+        sendRPGCommand(RPGSessionRules.MP_MODULE.EVENTS.READING_START)
     end
 end
 
@@ -71,12 +72,7 @@ function ISReadABook:stop()
     -- if this is a multiplayer game and the player is reading an RPG manual, notify the server to stop tracking the RPG session
     if isClient() and isRPGManual(self.item) then
         print("    ISReadABook:stop() - RPG manual detected in multiplayer, sending client command to stop RPG session for player " .. self.character:getUsername())
-        sendClientCommand(
-            self.character,
-            RPGSessionRules.MP_MODULE.NAME,
-            RPGSessionRules.MP_MODULE.EVENTS.READING_STOP,
-            {}
-        )
+        sendRPGCommand(RPGSessionRules.MP_MODULE.EVENTS.READING_STOP)
     end
 
     originalStop(self)
@@ -109,9 +105,10 @@ local function applySoloBulkDiceBonus(player, rpgManual)
         local unhappinessReduction = RPGSessionRules.getRPGSessionUnhappinessReduction() * intervalCount
         local stressReduction = RPGSessionRules.getRPGSessionStressReduction() / 100 * intervalCount
         local stats = player:getStats()
+        local stress = stats:get(CharacterStat.STRESS)
 
         stats:remove(CharacterStat.UNHAPPINESS, unhappinessReduction)
-        stats:setStress(math.max(0, stats:getStress() - stressReduction))
+        stats:set(CharacterStat.STRESS, math.max(0, stress - stressReduction))
 
         print("    applySoloBulkDiceBonus() - unhappiness reduced by " .. tostring(unhappinessReduction) .. " | stress reduced by " .. tostring(stressReduction))
     end
@@ -127,12 +124,7 @@ function ISReadABook:perform()
             applySoloBulkDiceBonus(self.character, self.item)
         else -- this is a multiplayer game
             print("    ISReadABook:perform() - multiplayer game detected, sending client command to notify server for player " .. self.character:getUsername())
-            sendClientCommand(
-                self.character,
-                RPGSessionRules.MP_MODULE.NAME,
-                RPGSessionRules.MP_MODULE.EVENTS.READING_COMPLETE,
-                {}
-            )
+            sendRPGCommand(RPGSessionRules.MP_MODULE.EVENTS.READING_COMPLETE)
         end
     end
 
