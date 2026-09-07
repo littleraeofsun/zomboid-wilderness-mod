@@ -119,9 +119,13 @@ local function onCreatePlayer(playerNum, player)
 end
 
 local function onInventoryRefresh(inventoryPage, reason)
-    print("WildernessSurvivalRules: onInventoryRefresh() called for inventoryPage " .. tostring(inventoryPage) .. " and reason " .. tostring(reason))
-    local player = getSpecificPlayer(0)
-    update(player)
+    -- A refresh emits begin, beforeFloor, buttonsAdded, and end. Only the final
+    -- character-inventory phase can reflect a compass change.
+    if reason ~= "end" or not inventoryPage or not inventoryPage.onCharacter then
+        return
+    end
+
+    update(getSpecificPlayer(inventoryPage.player))
 end
 
 local function onMinute()
