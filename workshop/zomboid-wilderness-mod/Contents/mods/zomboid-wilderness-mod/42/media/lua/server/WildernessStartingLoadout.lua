@@ -61,40 +61,30 @@ end
 
 local function applyMultiplayerStartingLoadout(player)
     if not WildernessStartingLoadoutRules.shouldUseCustomStartingItems() then
-        print("WildernessStartingLoadout: applyMultiplayerStartingLoadout() - sandbox setting is disabled, skipping loadout application.")
         return
     end
 
     local username = player:getUsername()
     if not username then
-        print("WildernessStartingLoadout: applyMultiplayerStartingLoadout() - player has no username, skipping loadout application.")
         return
     end
 
-    print("WildernessStartingLoadout: applyMultiplayerStartingLoadout() - applying starting loadout for player " .. username)
-
     if hasStartingLoadout(player) then
-        print("    applyMultiplayerStartingLoadout() - starting loadout already applied for player " .. player:getUsername() .. ", skipping.")
         return
     end
         
     removeAllNonClothingItems(player)
 
-    print("    applyMultiplayerStartingLoadout() - removed all non-clothing items from player ")
-
     local preset = WildernessStartingLoadoutRules.getStartingItemsPreset()
     if preset == "Naked and Afraid" then
         WildernessStartingLoadoutRules.stripAllClothing(player)
-        print("    applyMultiplayerStartingLoadout() - N&A: stripped all clothing from player ")
     end    
 
     local startingItems = WildernessStartingLoadoutRules.getStartingItemsForPreset(preset)
     if startingItems == nil then
-        print("    applyMultiplayerStartingLoadout() - no starting items found for preset " .. preset)
         return
     end
 
-    print("    applyMultiplayerStartingLoadout() - adding starting items for preset " .. preset)
     for _, item in ipairs(startingItems) do
         addItem(player:getInventory(), item)
     end
@@ -106,8 +96,6 @@ local function applyMultiplayerStartingLoadout(player)
     end
     
     markStartingLoadoutApplied(player)
-
-    print("    applyMultiplayerStartingLoadout() - starting loadout applied for player " .. player:getUsername())
 end
 
 local function onClientCommand(module, command, player, args)

@@ -83,8 +83,6 @@ local function update(player)
         return
     end
 
-    print("WildernessSurvivalRules: compass state changed to " .. tostring(hasCompass) .. " for player " .. tostring(player))
-
     playerHadCompass[playerNum] = hasCompass
     setMiniMapVisible(playerNum, hasCompass)
 end
@@ -114,7 +112,6 @@ local function onCreatePlayer(playerNum, player)
         return
     end
 
-    print("WildernessSurvivalRules: onCreatePlayer() called for playerNum " .. tostring(playerNum) .. " and player " .. tostring(player))
     enforceInitialMiniMapVisibility(playerNum, player)
 end
 
@@ -135,7 +132,6 @@ end
 
 local function registerCompassEvents()
     if WildernessSurvivalRules.getCompassMinimapMode() == "Disabled" then
-        print("WildernessSurvivalRules: Compass minimap mode is disabled, skipping event registration.")
         return
     end
 
@@ -147,7 +143,6 @@ local function registerCompassEvents()
     if player then
         enforceInitialMiniMapVisibility(0, player)
     end
-    print("WildernessSurvivalRules: Compass minimap mode is enabled, registered events.")
 end
 
 -- ISMiniMap registers its player-creation handler while it is required above, so this

@@ -27,7 +27,6 @@ local function isReadingRPGManual(player)
 end
 
 local function refreshActiveReaders(onlinePlayers)
-    print("RPGSessionRules: refreshActiveReaders() - refreshing active readers from replicated reading state.")
     local currentlyReading = {}
 
     for i = 0, onlinePlayers:size() - 1 do
@@ -35,14 +34,12 @@ local function refreshActiveReaders(onlinePlayers)
         local playerID = player and player:getOnlineID()
 
         if playerID and isReadingRPGManual(player) then
-            print("RPGSessionRules: refreshActiveReaders() - detected reader " .. tostring(player:getUsername()) .. " (ID: " .. tostring(playerID) .. ")")
             currentlyReading[playerID] = true
             if not activeReaders[playerID] then
                 activeReaders[playerID] = {
                     player = player,
                     elapsedMinutes = 0
                 }
-                print("RPGSessionRules: detected reader " .. tostring(player:getUsername()) .. " from replicated reading state.")
             end
         end
     end
@@ -117,7 +114,6 @@ end
 -- =========================================================
 
 local function applyDiceBonus(player)
-    print("**********RPG BONUS FOR " .. tostring(player:getUsername()) .. " (ID: " .. tostring(player:getOnlineID()) .. ")**********")
     local stats = player:getStats()
 
     stats:remove(
@@ -138,12 +134,8 @@ end
 local function applySession(reader)
     local onlinePlayers = getOnlinePlayers()
 
-    print("RPGSessionRules: applySession() called for " .. tostring(onlinePlayers:size()) .. " online players.")
-
     for i = 0, onlinePlayers:size() - 1 do
         local participant = onlinePlayers:get(i)
-
-        print("    applySession() - checking participant " .. tostring(participant:getUsername()) .. " (ID: " .. tostring(participant:getOnlineID()) .. ")")
 
         if participant
         and isWithinDiceRange(reader, participant)
@@ -161,24 +153,20 @@ end
 -- =========================================================
 
 local function onClientCommand(module, command, player, args)
-    print("RPGSessionRules: onClientCommand() called with module: " .. tostring(module) .. ", command: " .. tostring(command) .. ", player: " .. tostring(player:getUsername()) .. ", args: " .. tostring(args))
     if module ~= RPGSessionRules.MP_MODULE.NAME
     or not RPGSessionRules.isRPGSessionEnabled() then
-        print("    onClientCommand() - module does not match " .. tostring(RPGSessionRules.MP_MODULE.NAME) .. " or RPG sessions are disabled, ignoring command.")
         return
     end
 
     local playerID = player:getOnlineID()
 
     if player:isDead() then
-        print("    onClientCommand() - player " .. tostring(player:getUsername()) .. " (ID: " .. tostring(playerID) .. ") is dead, removing from active readers.")
         activeReaders[playerID] = nil
         return
     end
 
     if command == RPGSessionRules.MP_MODULE.EVENTS.READING_START
         and RPGSessionRules.isRPGSessionEnabled() then
-        print("RPGSessionRules: onClientCommand() - player " .. tostring(player:getUsername()) .. " (ID: " .. tostring(playerID) .. ") has started reading.")
 
         if not activeReaders[playerID] then
             activeReaders[playerID] = {
@@ -188,14 +176,9 @@ local function onClientCommand(module, command, player, args)
         end
 
     elseif command == RPGSessionRules.MP_MODULE.EVENTS.READING_STOP then
-
-        print("RPGSessionRules: onClientCommand() - player " .. tostring(player:getUsername()) .. " (ID: " .. tostring(playerID) .. ") has cancelled reading.")
-
         activeReaders[playerID] = nil
 
     elseif command == RPGSessionRules.MP_MODULE.EVENTS.READING_COMPLETE then
-
-        print("RPGSessionRules: onClientCommand() - player " .. tostring(player:getUsername()) .. " (ID: " .. tostring(playerID) .. ") has finished reading.")
         activeReaders[playerID] = nil
         applySession(player) -- apply final bonus for completing the session
 
@@ -221,19 +204,14 @@ local function everyMinute()
     -- reading state provides a server-authoritative fallback.
     refreshActiveReaders(onlinePlayers)
 
-    print("RPGSessionRules: everyMinute() - " .. tostring(onlinePlayers:size()) .. " online players and " .. tostring(getActiveReaderCount()) .. " active readers.")
-
     for readerID, session in pairs(activeReaders) do
         local reader = getOnlinePlayerByID(readerID)
 
         if not reader or reader:isDead() then
-            print("    everyMinute() - reader " .. tostring(readerID) .. " is no longer online or is dead, removing from active readers.")
             activeReaders[readerID] = nil
 
         else
             session.elapsedMinutes = session.elapsedMinutes + 1
-
-            print("    everyMinute() - reader " .. tostring(readerID) .. " has been reading for " .. tostring(session.elapsedMinutes) .. " minutes.")
 
             -- apply bonus if the session has reached the configured interval
             if session.elapsedMinutes >= RPGSessionRules.getRPGSessionInterval() then
